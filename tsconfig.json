@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "es6",
+    "moduleResolution": "node",
+    "newLine": "lf",
+    "declaration": true,
+    "declarationMap": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "outDir": "dist"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["src/generated"]
+}

@@ -1,0 +1,14 @@
+@top Document { (Command | Text | Comment)* }
+
+Command {
+  "\\" keyword
+}
+
+@tokens {
+  keyword { std.asciiLetter+ }
+  Text { std.asciiLetter+ }
+  Comment { "%" (![\n])+ }
+  space { std.whitespace+ }
+}
+
+@skip { space }
