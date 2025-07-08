@@ -10,13 +10,13 @@ export default {
   ],
   plugins: [
     lezer({
-      outputDir: 'generated'
+      outputDir: 'generated',
     }),
     typescript({
       declaration: true,
       declarationDir: 'dist',
       rootDir: 'src',
-      skipLibCheck: true
-    })
-  ]
+      skipLibCheck: true,
+    }),
+  ],
 }
