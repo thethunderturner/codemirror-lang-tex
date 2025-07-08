@@ -1,12 +1,30 @@
 import { Completion, autocompletion } from '@codemirror/autocomplete'
 import { texKeywords } from './keywords'
 
-const topLevelCompletions: Completion[] = texKeywords.map((kw) => ({
-  label: '\\' + kw.name,
-  type: 'keyword',
-  boost: 99,
-  apply: '\\' + kw.name,
-}))
+function topLevelCompletionFor(keyword: typeof texKeywords[number]): Completion {
+  if (!keyword.hasNested) {
+    // Case 1: No nested args → \command
+    return {
+      label: '\\' + keyword.name,
+      type: 'keyword',
+      apply: '\\' + keyword.name,
+    }
+  }
+
+  // Case 2 & 3: Has creative or known options → \command{<cursor>}
+  return {
+    label: '\\' + keyword.name,
+    type: 'keyword',
+    apply: (view, completion, from, to) => {
+      view.dispatch({
+        changes: { from, to, insert: `\\${keyword.name}{}` },
+        selection: { anchor: from + keyword.name.length + 2 },
+      })
+    },
+  }
+}
+
+const topLevelCompletions: Completion[] = texKeywords.map(topLevelCompletionFor)
 
 export const texAutocomplete = autocompletion({
   override: [
@@ -25,7 +43,7 @@ export const texAutocomplete = autocompletion({
       const backslashStart = text.lastIndexOf('\\', braceStart)
       if (braceStart > -1 && backslashStart > -1) {
         const command = text.slice(backslashStart + 1, braceStart).trim()
-        const match = texKeywords.find((k) => k.name === command && k.hasNested)
+        const match = texKeywords.find((k) => k.name === command && k.hasNested && k.nestedOptions)
         if (match?.nestedOptions) {
           return {
             from: braceStart + 1,
