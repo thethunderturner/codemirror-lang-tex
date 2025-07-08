@@ -3,5 +3,5 @@
 /src/*.js
 /src/*.d.ts
 .idea/
-packs
-/src/generated
+packs/*
+/src/generated/*
